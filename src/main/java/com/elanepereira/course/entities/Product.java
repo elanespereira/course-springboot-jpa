@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,6 +37,9 @@ public class Product implements Serializable{
 	//@Transient //impede que tente interpretar o relacionamento, enquando nao configura com a notation de cima
 	private Set<Category> categories = new HashSet<>();
 	//usou o Set e nao o List pra garantir que sera só uma ocorrencia de cada tipo de categoria
+	
+	@OneToMany(mappedBy = "id.product") //id da classe, product eh um atributo da classe orderItem
+	private Set<OrderItem> items = new HashSet<>();
 	
 	public Product() {
 		
@@ -91,6 +96,16 @@ public class Product implements Serializable{
 	public void setImgUrl(String imgUrl) {
 		this.imgUrl = imgUrl;
 	}
+	
+	@JsonIgnore
+	public Set<Order> getOrders(){
+		Set<Order> set = new HashSet<>();
+		for (OrderItem x : items) {
+			set.add(x.getOrder());
+		}
+		return set;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
