@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import com.elanepereira.course.entities.Category;
 import com.elanepereira.course.entities.Order;
 import com.elanepereira.course.entities.OrderItem;
+import com.elanepereira.course.entities.Payment;
 import com.elanepereira.course.entities.Product;
 import com.elanepereira.course.entities.User;
 import com.elanepereira.course.entities.enums.OrderStatus;
@@ -82,6 +83,11 @@ public class TestConfig implements CommandLineRunner{
 		OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
 
 		orderItemRepository.saveAll(Arrays.asList(oi1,oi2,oi3,oi4));
-		
+	
+		Payment pay1 = new Payment(null,Instant.parse("2023-06-20T21:53:07Z"), o1);
+		/*pra salvar um objeto dependente de um pra um nao chama o repositorio do pagamento*/
+		o1.setPayment(pay1);
+		/*seta o pagamento na ordem e salva novamente a ordem*/
+		orderRepository.save(o1);
 	}	
 }
