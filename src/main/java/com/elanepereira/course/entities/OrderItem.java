@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import com.elanepereira.course.entities.pk.OrderItemPK;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -13,9 +14,9 @@ import jakarta.persistence.Table;
 @Table(name = "tb_order_item")
 public class OrderItem implements Serializable{
 	private static final long serialVersionUID = 1L;
-
+	
 	@EmbeddedId /*como eh uma entidade de relacionamento nao usa o @id*/
-	private OrderItemPK id;
+	private OrderItemPK id = new OrderItemPK();
 	
 	private Integer quantity;
 	private Double price;
@@ -32,6 +33,7 @@ public class OrderItem implements Serializable{
 		this.price = price;
 	}
 
+	@JsonIgnore /*para que nao de loop de pedidos*/
 	public Order getOrder() {
 		return id.getOrder();
 	}
