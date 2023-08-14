@@ -13,6 +13,8 @@ import com.elanepereira.course.repositories.UserRepository;
 import com.elanepereira.course.services.exceptions.DatabaseException;
 import com.elanepereira.course.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 //@Component eh generico. O @service eh mais especifico para o caso
 public class UserService {
@@ -46,9 +48,13 @@ public class UserService {
 	}
 	
 	public User update(Long id, User obj) {
-		User entity = repository.getReferenceById(id);
-		updateData(entity, obj);
-		return repository.save(entity);
+		try {
+			User entity = repository.getReferenceById(id);
+			updateData(entity, obj);
+			return repository.save(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 
 	private void updateData(User entity, User obj) {
